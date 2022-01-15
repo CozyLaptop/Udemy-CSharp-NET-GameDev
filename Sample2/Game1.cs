@@ -18,6 +18,10 @@ namespace Sample2
         Vector2 targetPosition = new Vector2(300, 300);
         const int targetRadius = 45;
 
+        MouseState mState;
+        int score = 0;
+        private bool mReleased;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -47,8 +51,22 @@ namespace Sample2
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            mState = Mouse.GetState();
 
+            if (mState.LeftButton == ButtonState.Pressed && mReleased == true)
+            {
+                float mouseTargetDist = Vector2.Distance(targetPosition, mState.Position.ToVector2());
+                if (mouseTargetDist < targetRadius)
+                {
+                    score++;
+                }
+                mReleased = false;
+            }
+            if (mState.LeftButton == ButtonState.Released)
+            {
+                mReleased = true;
+            }
+            
             base.Update(gameTime);
         }
 
@@ -58,8 +76,8 @@ namespace Sample2
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
-            _spriteBatch.DrawString(gameFont, "Test Message", new Vector2(100, 100), Color.White);
-            _spriteBatch.Draw(targetSprite, targetPosition, Color.White);
+            _spriteBatch.DrawString(gameFont, score.ToString(), new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(targetSprite, new Vector2(targetPosition.X - targetRadius, targetPosition.Y - targetRadius), Color.White);
 
             _spriteBatch.End();
 
