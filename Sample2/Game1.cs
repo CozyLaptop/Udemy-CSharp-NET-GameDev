@@ -13,6 +13,11 @@ namespace Sample2
         Texture2D crosshairSprite;
         Texture2D backgroundSprite;
 
+        SpriteFont gameFont;
+
+        Vector2 targetPosition = new Vector2(300, 300);
+        const int targetRadius = 45;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -34,6 +39,7 @@ namespace Sample2
             targetSprite = Content.Load<Texture2D>("target");
             crosshairSprite = Content.Load<Texture2D>("crosshairs");
             backgroundSprite = Content.Load<Texture2D>("sky");
+            gameFont = Content.Load<SpriteFont>("galleryFont");
         }
 
         protected override void Update(GameTime gameTime)
@@ -52,7 +58,8 @@ namespace Sample2
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
-            _spriteBatch.Draw(targetSprite, new Vector2(150, 150), Color.White);
+            _spriteBatch.DrawString(gameFont, "Test Message", new Vector2(100, 100), Color.White);
+            _spriteBatch.Draw(targetSprite, targetPosition, Color.White);
 
             _spriteBatch.End();
 
