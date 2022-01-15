@@ -51,7 +51,9 @@ namespace Sample2
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(targetSprite, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(targetSprite, new Vector2(150, 150), Color.White);
+
             _spriteBatch.End();
 
             // TODO: Add your drawing code here
