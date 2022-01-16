@@ -16,7 +16,7 @@ namespace Spaceship
         SpriteFont timerFont;
 
         Ship player = new Ship();
-        Asteroid testAsteroid = new Asteroid(250);
+        Controller gameController = new Controller();
 
         public Game1()
         {
@@ -30,7 +30,6 @@ namespace Spaceship
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
-            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
@@ -47,15 +46,30 @@ namespace Spaceship
             timerFont = Content.Load<SpriteFont>("timerFont");
 
 
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            player.shipUpdate(gameTime);
-            testAsteroid.asteroidUpdate(gameTime);
+            if (gameController.inGame)
+            {
+                player.shipUpdate(gameTime);
+            }
+            gameController.conUpdate(gameTime);
+            for (int i = 0; i < gameController.asteroids.Count; i++)
+            {
+                gameController.asteroids[i].asteroidUpdate(gameTime);
+
+                int sum = gameController.asteroids[i].radius + player.radius;
+                if(Vector2.Distance(gameController.asteroids[i].position, player.position) < sum)
+                {
+                    gameController.inGame = false;
+                    player.position = Ship.defaultPosition;
+                    gameController.asteroids.Clear();
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -65,10 +79,20 @@ namespace Spaceship
             _spriteBatch.Begin();
             _spriteBatch.Draw(spaceSprite, new Vector2(0, 0), Color.White);
             _spriteBatch.Draw(shipSprite, new Vector2(player.position.X - 34, player.position.Y - 50), Color.White);
-            _spriteBatch.Draw(asteroidSprite, new Vector2(testAsteroid.position.X - testAsteroid.radius, testAsteroid.position.Y - testAsteroid.radius), Color.White);
-            _spriteBatch.End();
+            for (int i = 0; i < gameController.asteroids.Count; i++)
+            {
+                _spriteBatch.Draw(asteroidSprite, new Vector2(gameController.asteroids[i].position.X - gameController.asteroids[i].radius, gameController.asteroids[i].position.Y - gameController.asteroids[i].radius), Color.White);
+            }
 
-            // TODO: Add your drawing code here
+            if(gameController.inGame == false)
+            {
+                string menuMessage = "Press Enter to Begin!";
+                Vector2 sizeOfText = gameFont.MeasureString(menuMessage);
+                int halfWidth = _graphics.PreferredBackBufferWidth / 2;
+                _spriteBatch.DrawString(gameFont, menuMessage, new Vector2(halfWidth - sizeOfText.X / 2, 200),Color.White);
+            }
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
