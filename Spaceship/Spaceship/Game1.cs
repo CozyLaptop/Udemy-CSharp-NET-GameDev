@@ -16,6 +16,7 @@ namespace Spaceship
         SpriteFont timerFont;
 
         Ship player = new Ship();
+        Asteroid testAsteroid = new Asteroid(250);
 
         public Game1()
         {
@@ -54,6 +55,7 @@ namespace Spaceship
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             player.shipUpdate(gameTime);
+            testAsteroid.asteroidUpdate(gameTime);
             base.Update(gameTime);
         }
 
@@ -63,6 +65,7 @@ namespace Spaceship
             _spriteBatch.Begin();
             _spriteBatch.Draw(spaceSprite, new Vector2(0, 0), Color.White);
             _spriteBatch.Draw(shipSprite, new Vector2(player.position.X - 34, player.position.Y - 50), Color.White);
+            _spriteBatch.Draw(asteroidSprite, new Vector2(testAsteroid.position.X - testAsteroid.radius, testAsteroid.position.Y - testAsteroid.radius), Color.White);
             _spriteBatch.End();
 
             // TODO: Add your drawing code here
