@@ -1,9 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Comora;
 
 namespace Shooting_RPG
 {
+    enum Dir
+    {
+        Down,
+        Up,
+        Left,
+        Right
+    }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -19,6 +27,9 @@ namespace Shooting_RPG
         Texture2D ball;
         Texture2D skull;
 
+        Player player = new Player();
+        Camera camera;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,6 +42,7 @@ namespace Shooting_RPG
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+            this.camera = new Camera(_graphics.GraphicsDevice);
             base.Initialize();
         }
 
@@ -40,14 +52,20 @@ namespace Shooting_RPG
 
             playerSprite = Content.Load<Texture2D>("Player/player");
             walkDown = Content.Load<Texture2D>("Player/walkDown");
-            walkDown = Content.Load<Texture2D>("Player/walkRight");
-            walkDown = Content.Load<Texture2D>("Player/walkLeft");
-            walkDown = Content.Load<Texture2D>("Player/walkUp");
+            walkRight = Content.Load<Texture2D>("Player/walkRight");
+            walkLeft = Content.Load<Texture2D>("Player/walkLeft");
+            walkUp = Content.Load<Texture2D>("Player/walkUp");
 
             background = Content.Load<Texture2D>("background");
             ball = Content.Load<Texture2D>("ball");
             skull = Content.Load<Texture2D>("skull");
 
+            player.animations[0] = new SpriteAnimation(walkDown, 4, 8);
+            player.animations[1] = new SpriteAnimation(walkUp, 4, 8);
+            player.animations[2] = new SpriteAnimation(walkLeft, 4, 8);
+            player.animations[3] = new SpriteAnimation(walkRight, 4, 8);
+
+            player.anim = player.animations[0];
         }
 
         protected override void Update(GameTime gameTime)
@@ -55,8 +73,9 @@ namespace Shooting_RPG
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
+            player.Update(gameTime);
+            this.camera.Position = player.Position;
+            this.camera.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -64,10 +83,12 @@ namespace Shooting_RPG
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(this.camera);
             _spriteBatch.Draw(background, new Vector2(-500, -500), Color.White);
+            //_spriteBatch.Draw(playerSprite, player.Position, Color.White);
+            player.anim.Draw(_spriteBatch);
             _spriteBatch.End();
-
+            
             base.Draw(gameTime);
         }
     }
