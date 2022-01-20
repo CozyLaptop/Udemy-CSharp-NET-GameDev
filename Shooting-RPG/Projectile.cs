@@ -11,8 +11,9 @@ namespace Shooting_RPG
         public static List<Projectile> projectiles = new List<Projectile>();
         Vector2 position;
         int speed = 1000;
-        int radius = 18;
+        public int radius = 18;
         Dir direction;
+        bool collided = false;
 
         public Projectile(Vector2 newPos, Dir newDir)
         {
@@ -26,6 +27,11 @@ namespace Shooting_RPG
             {
                 return position;
             }
+        }
+        public bool Collided
+        {
+            get{return collided;}
+            set{collided = value;}
         }
 
         public void Update(GameTime gametime)

@@ -66,6 +66,9 @@ namespace Shooting_RPG
             player.animations[3] = new SpriteAnimation(walkRight, 4, 8);
 
             player.anim = player.animations[0];
+
+            Enemy.enemies.Add(new Enemy(new Vector2(100, 100), skull));
+            Enemy.enemies.Add(new Enemy(new Vector2(700, 200), skull));
         }
 
         protected override void Update(GameTime gameTime)
@@ -82,6 +85,26 @@ namespace Shooting_RPG
                 proj.Update(gameTime);
             }
 
+            foreach (Enemy e in Enemy.enemies)
+            {
+                e.Update(gameTime, player.Position);
+            }
+            foreach (Projectile proj in Projectile.projectiles)
+            {
+                foreach (Enemy e in Enemy.enemies)
+                {
+                    int sum = proj.radius + e.radius;
+                    if (Vector2.Distance(proj.Position, e.Position) < sum)
+                    {
+                        proj.Collided = true;
+                        e.Dead = true;
+                    }
+                }
+            }
+
+            Projectile.projectiles.RemoveAll(p => p.Collided);
+            Enemy.enemies.RemoveAll(e => e.Dead);
+
             base.Update(gameTime);
         }
 
@@ -91,6 +114,11 @@ namespace Shooting_RPG
 
             _spriteBatch.Begin(this.camera);
             _spriteBatch.Draw(background, new Vector2(-500, -500), Color.White);
+
+            foreach (Enemy e in Enemy.enemies)
+            {
+                e.anim.Draw(_spriteBatch);
+            }
             foreach (Projectile proj in Projectile.projectiles)
             {
                 _spriteBatch.Draw(ball, new Vector2(proj.Position.X - 48, proj.Position.Y - 48), Color.White);
