@@ -11,6 +11,7 @@ namespace Shooting_RPG
         private int speed = 300;
         private Dir direction = Dir.Down;
         private bool isMoving = false;
+        private KeyboardState kStateOld = Keyboard.GetState();
 
         public SpriteAnimation anim;
         public SpriteAnimation[] animations = new SpriteAnimation[4];
@@ -59,6 +60,11 @@ namespace Shooting_RPG
                 isMoving = true;
             }
 
+            if (kState.IsKeyDown(Keys.Space))
+            {
+                isMoving = false;
+            }
+
             if (isMoving)
             {
                 anim.Update(gameTime);
@@ -79,11 +85,26 @@ namespace Shooting_RPG
                         break;
                 }
             }
-            else anim.setFrame(1);
+            else if (kState.IsKeyDown(Keys.Space))
+            {
+                anim.setFrame(0);
+            }
+            else
+            {
+                anim.setFrame(1);
+
+            }
 
             anim = animations[(int)direction];
 
             anim.Position = new Vector2(position.X - 48, position.Y - 48);
+
+            if (kState.IsKeyDown(Keys.Space) && kStateOld.IsKeyUp(Keys.Space))
+            {
+                Projectile.projectiles.Add(new Projectile(position, direction));
+            }
+
+            kStateOld = kState;
         }
     }
 }
