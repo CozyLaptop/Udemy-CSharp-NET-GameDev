@@ -26,6 +26,7 @@ namespace Shooting_RPG
         Texture2D background;
         Texture2D ball;
         Texture2D skull;
+        Texture2D slime;
 
         Player player = new Player();
         Camera camera;
@@ -59,6 +60,7 @@ namespace Shooting_RPG
             background = Content.Load<Texture2D>("background");
             ball = Content.Load<Texture2D>("ball");
             skull = Content.Load<Texture2D>("skull");
+            slime = Content.Load<Texture2D>("Slime");
 
             player.animations[0] = new SpriteAnimation(walkDown, 4, 8);
             player.animations[1] = new SpriteAnimation(walkUp, 4, 8);
@@ -74,7 +76,7 @@ namespace Shooting_RPG
                 Exit();
 
             player.Update(gameTime);
-            Controller.Update(gameTime, skull);
+            Controller.Update(gameTime, slime);
             this.camera.Position = player.Position;
             this.camera.Update(gameTime);
 
@@ -115,7 +117,7 @@ namespace Shooting_RPG
 
             foreach (Enemy e in Enemy.enemies)
             {
-                e.anim.Draw(_spriteBatch);
+                e.anim.Draw(_spriteBatch, 3);
             }
             foreach (Projectile proj in Projectile.projectiles)
             {

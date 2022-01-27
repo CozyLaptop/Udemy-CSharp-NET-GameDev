@@ -9,7 +9,7 @@ namespace Shooting_RPG
     {
         public static List<Enemy> enemies = new List<Enemy>();
 
-        private Vector2 position = new Vector2(0, 0);
+        private Vector2 position;
         int speed = 150;
         public SpriteAnimation anim;
         public int radius = 30;
@@ -18,7 +18,7 @@ namespace Shooting_RPG
         public Enemy(Vector2 newPos, Texture2D spriteSheet)
         {
             position = newPos;
-            anim = new SpriteAnimation(spriteSheet, 10, 6);
+            anim = new SpriteAnimation(spriteSheet, 4, 4);
         }
 
         public Vector2 Position

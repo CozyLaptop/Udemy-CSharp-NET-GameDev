@@ -29,6 +29,10 @@ namespace Shooting_RPG
         {
             spriteBatch.Draw(Texture, Position, Rectangles[FrameIndex], Color, Rotation, Origin, Scale, SpriteEffect, 0f);
         }
+        public void Draw(SpriteBatch spriteBatch, float scale)
+        {
+            spriteBatch.Draw(Texture, Position, Rectangles[FrameIndex], Color, Rotation, Origin, scale, SpriteEffect, 0f);
+        }
     }
 
     public class SpriteAnimation : SpriteManager
